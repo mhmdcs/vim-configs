@@ -78,7 +78,7 @@ After installing all the dependencies (prerequisites) on the new machine, then c
 
 #### Windows Installation
 
-<details><summary>WSL (Windows Subsystem for Linux)</summary>
+WSL (Windows Subsystem for Linux)
 
 ```
 wsl --install
@@ -87,14 +87,12 @@ sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
-</details>
 
 #### Linux Install
-<details><summary>Ubuntu Install Steps</summary>
+Ubuntu Install Steps
 
 ```
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
-</details>
