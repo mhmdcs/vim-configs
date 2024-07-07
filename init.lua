@@ -93,6 +93,12 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
+-- Netrw (neovim's default built-in file browser) settings
+vim.g.netrw_banner = 0 -- Disable the banner
+vim.g.netrw_liststyle = 3 -- Tree-style view
+vim.g.netrw_browse_split = 4 -- Open in previous window
+vim.g.netrw_winsize = 25 -- Set the width of the vertical split
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -325,7 +331,9 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      -- This dep is already loaded with nvim-tree which is eargerly loaded, which means it'll be loaded before telescope
+      -- which means that we don't need to duplicate it in two different plugin's dependencies
+      -- { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -875,6 +883,24 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+  { -- nvim-tree is a very popular file browser plugin, there's also neo-tree, if nvim-tree not to your liking.
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false, -- nvim-tree docs recommend disabling lazy loading. nvim-tree is lightweight and thus eager loading is better to avoid bugs.
+    dependencies = {
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+    },
+    config = function()
+      require('nvim-tree').setup {}
+
+      -- Key mappings for nvim-tree within the plugin's config function.
+      -- This ensures that the key mapping is only set after the plugin is initialized/loaded.
+      -- noremap = true: This option ensures the mapping is non-recursive,
+      -- and that it directly binds to the specified command without being affected by other mappings.
+      -- silent = true: This option suppresses command output messages and echoes, making the execution quieter and less intrusive.
+      vim.keymap.set('n', '<leader>fb', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
     end,
   },
 
