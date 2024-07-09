@@ -137,15 +137,15 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier (escape escape)
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n> (ctrl backslash, ctrl n), which
 -- is not what someone will guess without a bit more experience.
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
+-- TIP: Disable arrow keys in normal mode, will push you more into hjkl'ing :)
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
@@ -167,6 +167,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- some command/callback, the grou parameter helps us prevent duplicate listeners, if you've used js event listeners before and you called
 -- something like registering an event listener twice, you end up running the code twice which is not what we want to do
 -- and groups help prevent that.
+--
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -180,12 +181,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+--    Lazy (lazy.nvim) is one of the most popular neovim plugin managers, there are also others like Packer
+--    What this code does is: checks if Lazy is installed, if not, it installs it from the github repo, and
+--    lastly it prepends Lazy to neovim's runtime path, basically, this bootstraps Lazy so that even if you
+--    clone this neovim configuration on a new machine, the moment you run `nvim` Lazy will "magically"
+--    download itself and all the plugins specified in this config, basically it'll bootstrap itself.
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
+
+-- Now that neovim has Lazy installed (or, checks it's installed) after the code above, we can now
+-- initialize lazy, and then install and configure different plugins as we see fit.
 
 -- [[ Configure and install plugins ]]
 --
@@ -197,22 +206,25 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
--- NOTE: Here is where you install your plugins.
+-- NOTE: Here is where lazy is initialized, inside which we install the plugins.
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  -- NOTE: Plugins can be added directly with a full link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
+  -- Plugins in lazy.nvim are eagerly loaded by default
+  -- Unless specific loading conditions like event, cmd, ft, or keys are passed
+  -- which make the plugins lazily loaded based on specific conditions. For example:
+  -- event = 'BufRead' -- Loads the plugin when the buffer is read (i.e. when you open a file)
+  -- cmd = 'LspInfo' -- Load the plugin when the :LspInfo command is executed
+  -- ft = 'gitcommit' -- Load the plugin when editing git commit messages
+  -- keys = { '<leader>ff', '<leader>fg' } -- Load the plugin when these key mappings are pressed
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  -- adds visual mode `gc` and normal mode `gcc` keymaps to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} }, -- passing `opts = {}` with nothing is the same as not passing opts at all
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
