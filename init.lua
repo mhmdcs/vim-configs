@@ -223,6 +223,15 @@ require('lazy').setup({
   -- ft = 'gitcommit' -- Load the plugin when editing git commit messages
   -- keys = { '<leader>ff', '<leader>fg' } -- Load the plugin when these key mappings are pressed
 
+  -- There's also a `lazy` key that's vailable to all plugins managed by lazy.nvim. When set explicitly,
+  -- it controls whether a plugin should be eagerly or lazily loaded.
+
+  -- lazy = false: Ensures the plugin is eagerly loaded.
+  -- lazy = true: Ensures the plugin is lazily loaded, usually with other conditions.
+
+  -- This flag is implicitly set to `fales` by default, which means that all plugins are eagerly loaded by default,
+  -- but when conditions like event, cmd, ft, or keys are set, then `lazy` will be implicitly set to `true`.
+
   -- adds visual mode `gc` and normal mode `gcc` keymaps to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} }, -- passing `opts = {}` with nothing is the same as not passing opts at all
 
@@ -249,15 +258,29 @@ require('lazy').setup({
   -- This is often very useful to both group configuration, as well as handle
   -- lazy loading plugins that don't need to be loaded immediately at startup.
   --
+  -- By grouping (coupling) the configuration code to be set after the plugin itself is loaded, and using events to lazily load plugins
+  -- only when needed, you can create a more efficient and manageable Neovim configuration.
+  -- This is better than setting a plugin's configuration "globally" outside of Lazy's require('lazy').setup({}).
+  --
   -- For example, in the following configuration, we use:
   --  event = 'VimEnter'
+  -- The 'VimEnter' event is triggered after Neovim has finished initializing and the UI is ready.
   --
-  -- which loads which-key before all the UI elements are loaded. Events can be
+  -- Setting the event to 'VimEnter' loads which-key before all the UI elements are loaded. Events can be
   -- normal autocommands events (`:help autocmd-events`).
+  --
+  -- By using an event, the plugin is not loaded immediately at startup, but rather when the specified event occurs.
+  -- This helps in reducing the initial loading time of Neovim.
   --
   -- Then, because we use the `config` key, the configuration only runs
   -- after the plugin has been loaded:
   --  config = function() ... end
+  --
+  -- The `config` key specifies a function to run as configuration for the plugin.
+  -- The configuration code inside this function will only execute after the plugin has been loaded.
+
+  -- This ensures that any setup or initialization code for the plugin is only run when the plugin is available,
+  -- avoiding potential issues that could arise if the plugin configurations have been set before the plugin itself is loaded yet.
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -449,7 +472,7 @@ require('lazy').setup({
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
           -- In this case, we create a function that lets us more easily define mappings specific
-          -- for LSP related items. It sets the mode, buffer and description for us each time.
+          -- for LSP related items. It sets the mode as normal mode, buffer as current buffer, and prefixes the description for us each time.
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
@@ -908,7 +931,8 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 }, {
   ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- This code uses short-circuting `and` & `or` operators in Lua, think of this like Java/C's ternary operator a ? b : c
+    -- This code says: if you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
     icons = vim.g.have_nerd_font and {} or {
       cmd = '⌘',
