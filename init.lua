@@ -906,6 +906,38 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fb', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
     end,
   },
+  { -- vim-visual-multi provides VSCode/Sublime-like multiple cursors selection in normal mode
+    -- Basic usage:
+    --
+    -- select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
+    -- create cursors vertically with Ctrl-Down/Ctrl-Up
+    -- select one character at a time with Shift-Arrows
+    -- press n/N to get next/previous occurrence
+    -- press [/] to select next/previous cursor
+    -- press q to skip current and get next occurrence
+    -- press Q to remove current cursor/selection
+    -- start insert mode with i,a,I,A
+    --
+    -- Two main modes:
+    --
+    -- in cursor mode commands work as they would in normal mode
+    -- in extend mode commands work as they would in visual mode
+    -- press Tab to switch between «cursor» and «extend» mode
+    --
+    -- Visual Mode Selection:
+    --
+    -- select the text in visual mode.
+    -- press \ (default mapping) to start selecting occurrences.
+    --
+    -- select Next Occurrence:
+    -- use n to add the next occurrence of the selected text.
+    --
+    -- select All Occurrences:
+    -- use N to select all occurrences of the selected text.
+    --
+    'mg979/vim-visual-multi',
+    branch = 'master',
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
