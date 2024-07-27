@@ -576,10 +576,17 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        clangd = {},
+        gopls = {
+          settings = {
+            gopls = {
+              completeUnimported = true, -- this will automatically import packages when you use auto complete
+            },
+          },
+        },
+        pyright = {},
+        rust_analyzer = {},
+        bashls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -599,7 +606,7 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -662,7 +669,14 @@ require('lazy').setup({
         }
       end,
       formatters_by_ft = {
+        go = { 'gofmt' },
+        rust = { 'rustfmt' },
+        python = { 'black' },
+        c = { 'clang_format' },
         lua = { 'stylua' },
+        bash = { 'shfmt', 'shellcheck' },
+        zsh = { 'shfmt', 'shellcheck' },
+        sh = { 'shfmt', 'shellcheck' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -672,6 +686,12 @@ require('lazy').setup({
       },
     },
   },
+  -- debuggers to install:
+  -- Go: dlv (Delve)
+  -- TypeScript: vscode-node-debug2
+  -- Python: debugpy
+  -- Rust: lldb (via vscode-lldb)
+  -- C: gdb or lldb
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -845,7 +865,7 @@ require('lazy').setup({
       require('github-theme').setup {
         -- ...
       }
-
+      vim.opt.cursorlineopt = 'number' -- disables line highlights, but keeps line number highlights
       vim.cmd 'colorscheme github_dark_default'
     end,
   },
