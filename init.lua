@@ -642,7 +642,26 @@ require('lazy').setup({
       }
     end,
   },
-
+  -- install these formatters externally first:
+  -- Go's gofmt: run `brew install go`, to install the entire Go programming language toolchain (compiler, etc)
+  -- gofmt comes by default with the Go installation.
+  --
+  -- Rust's rustfmt: run `brew install rustup` to install the entire Rust programming language toolchain (compiler, etc)
+  -- then run `rustup component add rustfmt`
+  --
+  -- Python's black: run `brew install black` or `pip install black`
+  --
+  -- C's clang_format: run `brew install clang-format`
+  --
+  -- Lua's stylua: run `brew install stylua`
+  --
+  -- Bash's shfmt: run `brew install shfmt` or `go install mvdan.cc/sh/v3/cmd/shfmt@latest`
+  -- Bash's shellcheck: run `brew install shellcheck`
+  --
+  -- JavaScript/TypeScript's eslint and prettier: run `brew install node` to downlaod the entire Node.js toolchain (npm, etc)
+  -- then run `npm install -g eslint_d` for improved eslint, or `npm install -g eslint` for the default.
+  -- then run `npm install -g @fsouza/prettierd`for improved prettier, or `npm install -g prettier` for the default.
+  --
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -675,8 +694,6 @@ require('lazy').setup({
         c = { 'clang_format' },
         lua = { 'stylua' },
         bash = { 'shfmt', 'shellcheck' },
-        zsh = { 'shfmt', 'shellcheck' },
-        sh = { 'shfmt', 'shellcheck' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -686,12 +703,14 @@ require('lazy').setup({
       },
     },
   },
-  -- debuggers to install:
+  -- Debuggers
+  -- set up nvim-dap (Debug Adapter Protocol) to configure debuggers for each language
+  -- then externally install these debuggers from the CLI:
   -- Go: dlv (Delve)
   -- TypeScript: vscode-node-debug2
   -- Python: debugpy
-  -- Rust: lldb (via vscode-lldb)
-  -- C: gdb or lldb
+  -- Rust: lldb
+  -- C: lldb or gdb
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
