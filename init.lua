@@ -593,9 +593,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
-
+        tsserver = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -651,7 +649,8 @@ require('lazy').setup({
   --
   -- Python's black: run `brew install black` or `pip install black`
   --
-  -- C's clang_format: run `brew install clang-format`
+  -- C's clang_format: run `brew install llvm` to install LLVM, which contains the clang C compiler
+  -- then run `brew install clang-format`
   --
   -- Lua's stylua: run `brew install stylua`
   --
@@ -694,6 +693,8 @@ require('lazy').setup({
         c = { 'clang_format' },
         lua = { 'stylua' },
         bash = { 'shfmt', 'shellcheck' },
+        javascript = { 'prettierd', 'eslint_d' },
+        typescript = { 'prettierd', 'eslint_d' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
