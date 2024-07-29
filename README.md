@@ -19,15 +19,12 @@ External Requirements:
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
 - Clipboard tool (xclip/xsel/win32yank or other depending on platform)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
-  - if `vim.g.have_nerd_font` in `init.lua` is set to true
-- Language Setup:
-  - If want to write Typescript, you need `npm`
-  - If want to write Golang, you will need `go`
-  - etc.
+  - don't forget to set `vim.g.have_nerd_font` in `init.lua` to true
+  - don't forget to set JetBrains Mono or Hack nerd font patches as the font in the terminal emulator program settings (iTerm2, etc)
 
 ### Install
 
-Neovim's configurations are located under the following paths, depending on the OS:
+Neovim's configuration files are located under the following directory paths, depending on the OS:
 
 | OS | PATH |
 | :- | :--- |
@@ -63,16 +60,17 @@ Start Neovim
 nvim
 ```
 
-Lazy plugin manager (lazy.nvim) will install all the plugins automatically. Use `:Lazy` to view
+(I like to set vim as an alias for nvim)
+
+When you start nvim for the first time, lazy plugin manager (lazy.nvim) will install all the plugins automatically. Use `:Lazy` to view
 current plugin status. Hit `q` to close the window.
 
-### FAQ
-
-Will update with notes if needed.
+To check the current status of installed tools, or manually instalL other tools (that are external to nvim and its ecosystem like LSPs,
+formatters, linters, etc), run `:Mason`.
 
 ### Install External Dependencies (Prerequisites)
 
-Below are OS specific install instructions for Neovim and dependencies.
+Below are OS specific install instructions for Neovim and dependencies on Windows and Linux, for macOS I'll probably (usually?) have everything I need installed by default.
 
 After installing all the dependencies (prerequisites) on the new machine, then clone this repo to set up the configs.
 
